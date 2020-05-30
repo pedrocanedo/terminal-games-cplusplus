@@ -3,22 +3,21 @@
 #include <string>
 #include <stdlib.h>
 #include <time.h>
-
 using namespace std;
+
 ///48 a 57 ('0' a '9')
-string senha;
-bool wingame (string &);
-void intro();
-bool valido(string &);
-void dica (string &);
-void gerasenha(string &);
+
+void intro(); /// Apresenta as intruções do jogo
+bool valido(string &); /// Verifica se o chute está no formato válido requerido pela regra do jogo
+void dica (string &, string &); /// Calcula a qntd de "ótimo", "regular" e "péssimo" do chute em relação a senha do cofre e imprime na tela
+string gerasenha(); ///Gera a senha do cofre
 
 int main(){
-    string chute="",op="";
-    int tentativa=0;
-    gerasenha(senha);
-    ///cout<<senha<<endl;
-    while(op!="z"){
+    string chute,op="",senha;
+    int tentativa;
+
+
+    while(op!="z"){ ///Loop principal do jogo
         int mFlag = 0;
         cout<<"### INVASOR DE COFRE ###\n";
         cout<<"1- Comecar jogo\n"
@@ -27,16 +26,17 @@ int main(){
         <<"z- Sair\n>>";
         getline(cin,op);
         if (op=="3"){
-            cout<<"Criado por Pedro Canedo, \nestudante de Engenharia de Controle e Automacao,"
-            <<"pela Universidade Federal de Itajuba, campus avancado de Itabira.\n"
-            <<"Criado entre os dias 13 e 14 de Novembro de 2019\n\n";
+            cout<<"Criado por Pedro Canedo, [github: pedrocanedo]\n\n";
             system("PAUSE");
             system("cls");
 
         }
         if (op=="2") intro();
         if (op=="1"){
-            while(!wingame(chute)){
+            senha = gerasenha();
+            chute="";
+            tentativa=0;
+            while(chute != senha ){
                 cout<<"Entre com uma senha valida: ";
                 getline(cin,chute);
                 ///if (chute=="m")
@@ -44,18 +44,15 @@ int main(){
                     cout<<"Formato de senha invalido, senha deve ter 3 numeros diferentes entre si, indo de 0 a 9 cada um.\n\n";
                 }
                 else {
-                    cout<<"\nsenha valida;\n";
+                    cout<<"\ntentativa valida;\n";
 
                     /// analisa e da as dicas
-                    dica(chute);
+                    dica(chute,senha);
                     tentativa++;
 
                 }
             }
-            cout<<"\nVoce acertou a senha, parabens. \n"<<"Voce acertou na tentativa "<<tentativa<<endl;
-            tentativa=0;
-            chute="";
-            gerasenha(senha);
+            cout<<"\nVoce acertou a senha, parabens. \n"<<"Voce acertou na tentativa "<<tentativa<<endl<<endl;
         }
         if (op=="z") return 0;
         else op="";
@@ -65,8 +62,8 @@ int main(){
 
 }
 
-void gerasenha(string &senha){
-    senha="";
+string gerasenha(){
+    string senha="";
     int a,b,c;
     b = c = 0;
     srand(time(NULL));
@@ -79,10 +76,10 @@ void gerasenha(string &senha){
     senha+=(char)a;
     senha+=(char)b;
     senha+=(char)c;
-
+    return senha;
 }
 
-void dica(string &chute){
+void dica(string &chute, string &senha){
     /// testa otimo, regular e pessimo
     int oti,reg,pes;
     char a,b,c;
@@ -130,7 +127,7 @@ void intro(){
     <<"A senha eh composta por 3 digitos que nao se repetem"<<endl
     <<"e que vao de 0 a 9 cada um"<<endl<<endl
     <<"Escolha os tres digitos e o cofre ira revela-lo algumas dicas..."<<endl
-    <<"AS dicas sao:\n"
+    <<"As dicas sao:\n"
     <<"- Otimo: quando um digito estah na posicao correta.\n"
     <<"- Regular: quando um digito correto estah na posicao errada.\n"
     <<"- Pessimo: quando um digito nao corresponde a nenhum da senha.\n\n";
@@ -143,9 +140,4 @@ void intro(){
     <<"\n\n"<<"Se voce entendeu, prossiga para limpar a tela. BOA SORTE.\n";
     system("PAUSE");
     system("cls");
-}
-
-bool wingame(string &chute){
-    if (chute == senha ) return true;
-    else return false;
 }
